@@ -1,18 +1,18 @@
-# 02 — Workspace
+# 02 - Workspace
 
 ## Say this first
 
-A Workspace declares what should appear on disk for agents — git repos, skills path, MCP intent. On maiden boot the runner clones git and mkdir’s skills. MCP registries and servers in YAML are **not materialized** by setup today. After success, a marker under `/ax` skips re-setup — but that marker is not on the durable `/workspace` volume.
+A Workspace declares what should appear on disk for agents - git repos, skills path, MCP intent. On maiden boot the runner clones git and mkdir’s skills. MCP registries and servers in YAML are **not materialized** by setup today. After success, a marker under `/ax` skips re-setup - but that marker is not on the durable `/workspace` volume.
 
 ## Kubernetes analogy (one sentence)
 
-Workspace is like a PVC plus an initContainer: durable `/workspace` plus first-boot setup — except setup runs inside the task runner, not as a cluster init pod.
+Workspace is like a PVC plus an initContainer: durable `/workspace` plus first-boot setup - except setup runs inside the task runner, not as a cluster init pod.
 
 ### Where the analogy breaks
 
 - Workspace is a **Redis API object**, not a Volume CRD.
-- Multiple workspaces = **subdirs under one durable volume**, not multiple PVCs. **Confident** — [`types.go`](https://github.com/google/ax/blob/main/pkg/apis/v1alpha1/types.go) `WorkspacePaths()`.
-- Docs cite `examples/multi-workspace.yaml` — **file 404 on main**. Only `examples/simple.yaml` and `examples/task.yaml` exist.
+- Multiple workspaces = **subdirs under one durable volume**, not multiple PVCs. **Confident** - [`types.go`](https://github.com/google/ax/blob/main/pkg/apis/v1alpha1/types.go) `WorkspacePaths()`.
+- Docs cite `examples/multi-workspace.yaml` - **file 404 on main**. Only `examples/simple.yaml` and `examples/task.yaml` exist.
 
 ## Big picture diagram
 
@@ -32,16 +32,16 @@ flowchart LR
 
 **Mistake:** “MCP and skills registries in the Workspace YAML will install tools like an init container installs packages.”
 
-**Correct:** **What runs today:** git clone + `MkdirAll` for `skills.path` + optional Antigravity if `GEMINI_API_KEY` is set. MCP blocks are schema/docs intent. **Confident** — [`internal/workspace/setup.go`](https://github.com/google/ax/blob/main/internal/workspace/setup.go) (`cloneRepos`, `setupSkills`; no MCP writer).
+**Correct:** **What runs today:** git clone + `MkdirAll` for `skills.path` + optional Antigravity if `GEMINI_API_KEY` is set. MCP blocks are schema/docs intent. **Confident** - [`internal/workspace/setup.go`](https://github.com/google/ax/blob/main/internal/workspace/setup.go) (`cloneRepos`, `setupSkills`; no MCP writer).
 
 ## Niche findings
 
-- **Confident** — Maiden marker path: `/ax/initialized-<path>` (`DefaultAXDir = "/ax"`). [`setup.go`](https://github.com/google/ax/blob/main/internal/workspace/setup.go) L33–35, L101–125.
-- **Confident** — Durable mount is **only** `/workspace`. [`BuildActorTemplate`](https://github.com/google/ax/blob/main/internal/substrate/client.go) `DurableDir` + `MountPath: "/workspace"`.
-- **Likely gap** — On resume, if `/ax` is ephemeral and snapshot scope is DATA (workspace), marker may be gone → maiden re-runs (git into restored tree). Controller keeps `WorkspaceReady` sticky in Redis status regardless. See drift #13.
-- **Confident** — `PlanEnvironment` only called from `planner_test.go`, not runner/controller.
-- **Confident false cite fixed** — `examples/multi-workspace.yaml` **does not exist**. Upstream still links it from [`docs/manifests.md`](https://github.com/google/ax/blob/main/docs/manifests.md) ~L52. Multi-binding shape: Task `spec.workspaces[]` in [`examples/task.yaml`](https://github.com/google/ax/blob/main/examples/task.yaml) + proto.
-- **Confident** — First workspace binding = cwd for `spec.command`. [`runner/runner.go`](https://github.com/google/ax/blob/main/runner/runner.go).
+- **Confident** - Maiden marker path: `/ax/initialized-<path>` (`DefaultAXDir = "/ax"`). [`setup.go`](https://github.com/google/ax/blob/main/internal/workspace/setup.go) L33 - 35, L101 - 125.
+- **Confident** - Durable mount is **only** `/workspace`. [`BuildActorTemplate`](https://github.com/google/ax/blob/main/internal/substrate/client.go) `DurableDir` + `MountPath: "/workspace"`.
+- **Likely gap** - On resume, if `/ax` is ephemeral and snapshot scope is DATA (workspace), marker may be gone → maiden re-runs (git into restored tree). Controller keeps `WorkspaceReady` sticky in Redis status regardless. See drift #13.
+- **Confident** - `PlanEnvironment` only called from `planner_test.go`, not runner/controller.
+- **Confident false cite fixed** - `examples/multi-workspace.yaml` **does not exist**. Upstream still links it from [`docs/manifests.md`](https://github.com/google/ax/blob/main/docs/manifests.md) ~L52. Multi-binding shape: Task `spec.workspaces[]` in [`examples/task.yaml`](https://github.com/google/ax/blob/main/examples/task.yaml) + proto.
+- **Confident** - First workspace binding = cwd for `spec.command`. [`runner/runner.go`](https://github.com/google/ax/blob/main/runner/runner.go).
 
 ## Junior exercise
 
@@ -62,7 +62,7 @@ A **Workspace** is a reusable declaration of filesystem/tool landscape that task
 
 ### Spec
 
-**Confident** — [`ax.proto`](https://github.com/google/ax/blob/main/pkg/apis/v1alpha1/ax.proto) `WorkspaceSpec`
+**Confident** - [`ax.proto`](https://github.com/google/ax/blob/main/pkg/apis/v1alpha1/ax.proto) `WorkspaceSpec`
 
 ```yaml
 apiVersion: ax.io/v1alpha1
@@ -72,7 +72,7 @@ metadata:
   atespace: default
 spec:
   git:
-    - name: origin
+ - name: origin
       repo: https://github.com/org/repo.git
       branch: main
       dir: .
@@ -86,7 +86,7 @@ spec:
 ```yaml
 spec:
   workspaces:
-    - name: default-workspace
+ - name: default-workspace
       path: /workspace
       goal: "Install dependencies and run tests"
 ```
@@ -98,7 +98,7 @@ spec:
 | Step | Implemented |
 |------|-------------|
 | Git clone | Yes |
-| Skills dir create | Yes — mkdir only |
+| Skills dir create | Yes - mkdir only |
 | MCP registries/servers | **No** in setup.go |
 | Goal bootstrap | Optional Antigravity if key present |
 | Idempotency marker | `/ax/initialized-*` |
@@ -122,7 +122,7 @@ Controller polls `GET /readyz?check=workspace`. Runner sets ready after mounts s
 
 ## Operator notes
 
-- Warm start depends on marker + durable git content — understand `/ax` vs `/workspace` before relying on resume.
+- Warm start depends on marker + durable git content - understand `/ax` vs `/workspace` before relying on resume.
 - `GEMINI_API_KEY` comes from hardcoded secret lookup, not Model CR (see 04).
 - Git failure → no marker → stuck initializing; use `ax ssh` with debug.
 
@@ -131,6 +131,6 @@ Controller polls `GET /readyz?check=workspace`. Runner sets ready after mounts s
 | Item | Tag |
 |------|-----|
 | MCP server wiring into agent runtime | **Unknown** / not in setup |
-| Skill registry fetch | **Unknown** — mkdir only |
-| Planner on hot path | **Confident no** — tests only |
+| Skill registry fetch | **Unknown** - mkdir only |
+| Planner on hot path | **Confident no** - tests only |
 | Workspace update → running tasks | **Likely** needs task re-apply |

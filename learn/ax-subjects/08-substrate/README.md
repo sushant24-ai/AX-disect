@@ -1,4 +1,4 @@
-# 08 — Agent Substrate boundary
+# 08 - Agent Substrate boundary
 
 ## Say this first
 
@@ -20,12 +20,12 @@ Substrate is kubelet+CRI+CNI+snapshotter for actors; AX is a specialized control
 
 ```mermaid
 flowchart TB
-  subgraph ax["AX google/ax — ax-system"]
+  subgraph ax["AX google/ax - ax-system"]
     CTL["ax-controller"]
     REDIS[(Redis metadata)]
   end
 
-  subgraph sub["Substrate — ate-system"]
+  subgraph sub["Substrate - ate-system"]
     API["Control API"]
     ACT["Actor = task name"]
     WRK["gVisor worker"]
@@ -41,18 +41,18 @@ flowchart TB
 
 ## Wrong mental model
 
-**Mistake:** “AX owns the whole stack like a distro — if Task is Running, Substrate details are irrelevant.”
+**Mistake:** “AX owns the whole stack like a distro - if Task is Running, Substrate details are irrelevant.”
 
 **Correct:** Ownership matrix matters for outages. AX can show Running while worker dies until reconcile; Substrate can keep actors while Redis is wrong. Debug both planes.
 
 ## Niche findings
 
-- **Confident** — Client wraps `ateapipb`: CreateAtespace, CreateActorTemplate, CreateActor, Resume/Suspend/Delete, egress policies. [`internal/substrate/client.go`](https://github.com/google/ax/blob/main/internal/substrate/client.go).
-- **Confident** — Default API `api.ate-system.svc.cluster.local:443`, token `/var/run/secrets/ateapi/token`. [`deploy/ax-controller.yaml`](https://github.com/google/ax/blob/main/deploy/ax-controller.yaml).
-- **Confident** — Template: guest command runner, `/readyz` :80, DurableDir `/workspace`, gVisor, snapshots DATA scope + golden resume, bucket overridable `AX_SNAPSHOTS_BUCKET`.
-- **Confident** — Crashed actors deleted+recreated in EnsureActor path.
-- **Confident** — `spec.resources` not passed.
-- **Unknown** — Whether snapshot DATA includes `/ax`; multi-cluster Substrate.
+- **Confident** - Client wraps `ateapipb`: CreateAtespace, CreateActorTemplate, CreateActor, Resume/Suspend/Delete, egress policies. [`internal/substrate/client.go`](https://github.com/google/ax/blob/main/internal/substrate/client.go).
+- **Confident** - Default API `api.ate-system.svc.cluster.local:443`, token `/var/run/secrets/ateapi/token`. [`deploy/ax-controller.yaml`](https://github.com/google/ax/blob/main/deploy/ax-controller.yaml).
+- **Confident** - Template: guest command runner, `/readyz` :80, DurableDir `/workspace`, gVisor, snapshots DATA scope + golden resume, bucket overridable `AX_SNAPSHOTS_BUCKET`.
+- **Confident** - Crashed actors deleted+recreated in EnsureActor path.
+- **Confident** - `spec.resources` not passed.
+- **Unknown** - Whether snapshot DATA includes `/ax`; multi-cluster Substrate.
 
 ## Junior exercise
 
@@ -66,7 +66,7 @@ Draw two boxes labeled `ax-system` and `ate-system`. Place: Redis, ax-server, ax
 
 | Concern | AX | Substrate |
 |---------|-----|-----------|
-| YAML kinds in Redis | ✓ | — |
+| YAML kinds in Redis | ✓ | - |
 | Actor lifecycle | driver | ✓ |
 | `/workspace` volume | runner setup | ✓ durable + snap |
 | Egress enforce | Gateway spec | ✓ |
@@ -77,7 +77,7 @@ Draw two boxes labeled `ax-system` and `ate-system`. Place: Redis, ax-server, ax
 
 - Size Substrate workers for concurrency; Redis for metadata QPS.
 - Snapshot bucket growth with suspend frequency.
-- Template churn per image/env digest — cleanup on delete with retries.
+- Template churn per image/env digest - cleanup on delete with retries.
 - Deploy AX only after Control API reachable.
 
 ## Open questions

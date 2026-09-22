@@ -1,6 +1,6 @@
 # AX learning curriculum
 
-This directory is a **dissection curriculum** for [google/ax](https://github.com/google/ax) — Google's declarative orchestrator for sandboxed agent workloads on [Agent Substrate](https://github.com/agent-substrate/substrate).
+This directory is a **dissection curriculum** for [google/ax](https://github.com/google/ax) - Google's declarative orchestrator for sandboxed agent workloads on [Agent Substrate](https://github.com/agent-substrate/substrate).
 
 **AX-disect does not fork or modify upstream.** Claims are verified against a local checkout of `google/ax` (for example `/tmp/google-ax`). When upstream changes, re-read the cited paths.
 
@@ -8,19 +8,19 @@ This directory is a **dissection curriculum** for [google/ax](https://github.com
 
 Each subject under `ax-subjects/` is a **one-page teach kit** for architects training junior engineers.
 
-**Session shape (≈20–40 min per subject):**
+**Session shape (≈20 - 40 min per subject):**
 
-1. Speak **Say this first** aloud (2–4 sentences). No slides needed.
-2. Give the **Kubernetes analogy** in one sentence, then immediately the **Where the analogy breaks** bullets — that contrast is the lesson.
+1. Speak **Say this first** aloud (2 - 4 sentences). No slides needed.
+2. Give the **Kubernetes analogy** in one sentence, then immediately the **Where the analogy breaks** bullets - that contrast is the lesson.
 3. Walk the **Big picture diagram** (mermaid or `assets/` image). Have juniors narrate the arrows.
-4. Call out the **Wrong mental model** — ask who believed it.
+4. Call out the **Wrong mental model** - ask who believed it.
 5. Skim **Niche findings** (Confident / Likely / Unknown). Do not invent Confidence.
-6. Run the **Junior exercise** (usually a file read or `curl` of raw GitHub — no live cluster required).
+6. Run the **Junior exercise** (usually a file read or `curl` of raw GitHub - no live cluster required).
 7. Leave **deeper sections** as homework / office-hours depth.
 
 **Prerequisites:** comfort with Kubernetes concepts (Pods, Services, controllers), basic YAML, and willingness to read Go paths. No live AX cluster required for most exercises.
 
-**Time box:** 00-map half day orientation; 01–08 one subject per sitting; 09–10 ops day; 11 drift log always open beside the others.
+**Time box:** 00-map half day orientation; 01 - 08 one subject per sitting; 09 - 10 ops day; 11 drift log always open beside the others.
 
 ```mermaid
 flowchart LR
@@ -42,7 +42,7 @@ flowchart LR
 ## How to use this (self-serve)
 
 1. Start at [`ax-subjects/00-map/`](ax-subjects/00-map/README.md).
-2. Work **01–10** in order, or jump to a primitive.
+2. Work **01 - 10** in order, or jump to a primitive.
 3. Keep [`ax-subjects/11-doc-vs-code/`](ax-subjects/11-doc-vs-code/README.md) open as the living drift log.
 
 ## Teach-kit skeleton (every subject)
@@ -64,11 +64,11 @@ Non-trivial claims are tagged **Confident** (upstream path), **Likely**, or **Un
 | # | Folder | Topic |
 |---|--------|-------|
 | 00 | [`ax-subjects/00-map/`](ax-subjects/00-map/README.md) | Index, reading order, k8s mental-model map |
-| 01 | [`ax-subjects/01-task/`](ax-subjects/01-task/README.md) | Task — isolated execution unit |
-| 02 | [`ax-subjects/02-workspace/`](ax-subjects/02-workspace/README.md) | Workspace — git, MCP, skills, warm start |
-| 03 | [`ax-subjects/03-gateway/`](ax-subjects/03-gateway/README.md) | Gateway — egress allowlists |
-| 04 | [`ax-subjects/04-model/`](ax-subjects/04-model/README.md) | Model — platform LLM configuration |
-| 05 | [`ax-subjects/05-control-plane/`](ax-subjects/05-control-plane/README.md) | Control plane — gRPC, Redis, reconciliation |
+| 01 | [`ax-subjects/01-task/`](ax-subjects/01-task/README.md) | Task - isolated execution unit |
+| 02 | [`ax-subjects/02-workspace/`](ax-subjects/02-workspace/README.md) | Workspace - git, MCP, skills, warm start |
+| 03 | [`ax-subjects/03-gateway/`](ax-subjects/03-gateway/README.md) | Gateway - egress allowlists |
+| 04 | [`ax-subjects/04-model/`](ax-subjects/04-model/README.md) | Model - platform LLM configuration |
+| 05 | [`ax-subjects/05-control-plane/`](ax-subjects/05-control-plane/README.md) | Control plane - gRPC, Redis, reconciliation |
 | 06 | [`ax-subjects/06-runner-sandbox/`](ax-subjects/06-runner-sandbox/README.md) | Runner/sandbox contract |
 | 07 | [`ax-subjects/07-networking-atenet/`](ax-subjects/07-networking-atenet/README.md) | atenet routing and reachability |
 | 08 | [`ax-subjects/08-substrate/`](ax-subjects/08-substrate/README.md) | Agent Substrate boundary |
@@ -91,6 +91,6 @@ Non-trivial claims are tagged **Confident** (upstream path), **Likely**, or **Un
 
 ## Claim confidence legend
 
-- **Confident** — verified in upstream Go/proto/deploy code; path cited.
-- **Likely** — consistent with docs and partial code paths, not fully traced.
-- **Unknown** — not found in code reviewed; may be planned or doc-only.
+- **Confident** - verified in upstream Go/proto/deploy code; path cited.
+- **Likely** - consistent with docs and partial code paths, not fully traced.
+- **Unknown** - not found in code reviewed; may be planned or doc-only.

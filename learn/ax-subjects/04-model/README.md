@@ -1,4 +1,4 @@
-# 04 — Model
+# 04 - Model
 
 ## Say this first
 
@@ -6,13 +6,13 @@ A Model object stores provider, model id, parameters, and a secret reference in 
 
 ## Kubernetes analogy (one sentence)
 
-Model is like a ConfigMap plus SecretRef for platform LLM settings — except Tasks do not automatically consume it the way Pods mount a ConfigMap.
+Model is like a ConfigMap plus SecretRef for platform LLM settings - except Tasks do not automatically consume it the way Pods mount a ConfigMap.
 
 ### Where the analogy breaks
 
-- No Model CRD — gRPC `UpdateModel` only.
-- Reconciler does **not** read Model.secretKey for injection; it calls `lookupGeminiKey` with fixed names. **Confident** — [`reconciler.go`](https://github.com/google/ax/blob/main/internal/controller/reconciler.go) L41–42, L368+.
-- Non-google providers: client returns `unsupported provider`. **Confident** — [`internal/model/client.go`](https://github.com/google/ax/blob/main/internal/model/client.go) ~L486–495 (`ProviderGoogle` only path that generates).
+- No Model CRD - gRPC `UpdateModel` only.
+- Reconciler does **not** read Model.secretKey for injection; it calls `lookupGeminiKey` with fixed names. **Confident** - [`reconciler.go`](https://github.com/google/ax/blob/main/internal/controller/reconciler.go) L41 - 42, L368+.
+- Non-google providers: client returns `unsupported provider`. **Confident** - [`internal/model/client.go`](https://github.com/google/ax/blob/main/internal/model/client.go) ~L486 - 495 (`ProviderGoogle` only path that generates).
 
 ## Big picture diagram
 
@@ -31,18 +31,18 @@ flowchart TB
 
 ## Wrong mental model
 
-**Mistake:** “I applied a Model with Anthropic and secretKey my-key — all tasks now call Anthropic.”
+**Mistake:** “I applied a Model with Anthropic and secretKey my-key - all tasks now call Anthropic.”
 
 **Correct:** Model CR is stored. Hot-path bootstrap uses `gemini-api-secret` / `GEMINI_API_KEY`. Anthropic in manifests is doc-ahead; Go client only implements google. User `spec.command` brings its own SDK.
 
 ## Niche findings
 
-- **Confident** — Defaults in client: provider `google`, model `gemini-3.8-flash`, secret `gemini-api-secret`/`GEMINI_API_KEY`.
-- **Confident** — Planner / `NewPlannerFromStore` used in **tests only**; runner does not call planner.
-- **Confident** — `parameters.systemInstruction` lifted specially in client.
-- **Confident** — Anthropic **not implemented** in `Generate` switch (error for non-google). Upgraded from Unknown.
-- **Likely future** — Controller could read Model CR for key name; today hardcoded.
-- **Confident** — `TaskStatus.usage` never set from Model calls.
+- **Confident** - Defaults in client: provider `google`, model `gemini-3.8-flash`, secret `gemini-api-secret`/`GEMINI_API_KEY`.
+- **Confident** - Planner / `NewPlannerFromStore` used in **tests only**; runner does not call planner.
+- **Confident** - `parameters.systemInstruction` lifted specially in client.
+- **Confident** - Anthropic **not implemented** in `Generate` switch (error for non-google). Upgraded from Unknown.
+- **Likely future** - Controller could read Model CR for key name; today hardcoded.
+- **Confident** - `TaskStatus.usage` never set from Model calls.
 
 ## Junior exercise
 
@@ -54,7 +54,7 @@ flowchart TB
 
 ## One-line definition
 
-A **Model** is a named platform LLM configuration (provider, model id, parameters, secret ref) stored in AX for reuse — partially wired.
+A **Model** is a named platform LLM configuration (provider, model id, parameters, secret ref) stored in AX for reuse - partially wired.
 
 ## Design
 
@@ -79,10 +79,10 @@ RPCs: `GetModel`, `ListModels`, `UpdateModel`, `DeleteModel`. No status.
 
 | Consumer | Uses Model CR? |
 |----------|----------------|
-| Workspace planner | Yes — **tests only** |
-| Antigravity bootstrap | **No** — env `GEMINI_API_KEY` |
-| Task reconciler | **No** — hardcoded secret |
-| User agent command | **No** — BYO |
+| Workspace planner | Yes - **tests only** |
+| Antigravity bootstrap | **No** - env `GEMINI_API_KEY` |
+| Task reconciler | **No** - hardcoded secret |
+| User agent command | **No** - BYO |
 
 ## Operator notes
 

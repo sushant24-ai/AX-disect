@@ -1,4 +1,4 @@
-# 09 — CLI and operations
+# 09 - CLI and operations
 
 ## Say this first
 
@@ -6,13 +6,13 @@
 
 ## Kubernetes analogy (one sentence)
 
-`ax` is kubectl-shaped for four kinds — but ssh is guest gRPC, not `kubectl exec`, and context/tunnel state lives under `~/.ax/`.
+`ax` is kubectl-shaped for four kinds - but ssh is guest gRPC, not `kubectl exec`, and context/tunnel state lives under `~/.ax/`.
 
 ### Where the analogy breaks
 
-- No generic API discovery — fixed kinds only.
+- No generic API discovery - fixed kinds only.
 - `ax ssh` needs `spec.debug: true` and Running phase.
-- gRPC to ax-server uses **insecure** credentials in CLI. **Confident** — [`cmd/ax/main.go`](https://github.com/google/ax/blob/main/cmd/ax/main.go) ~L204.
+- gRPC to ax-server uses **insecure** credentials in CLI. **Confident** - [`cmd/ax/main.go`](https://github.com/google/ax/blob/main/cmd/ax/main.go) ~L204.
 - Watch may stop at `Running` (not only terminal states).
 
 ## Big picture diagram
@@ -38,21 +38,21 @@ flowchart TD
 
 ## Wrong mental model
 
-**Mistake:** “`ax delete` is like kubectl delete — object is gone when the command returns; `ax watch` stays until the Job completes.”
+**Mistake:** “`ax delete` is like kubectl delete - object is gone when the command returns; `ax watch` stays until the Job completes.”
 
-**Correct:** Delete is two-phase (Terminating → controller cleans actor). Client may return after mark-deleting; poll get until gone. Watch stops on Running/Failed/Completed — Completed never comes from controller, but Running closes watch early. **Likely/Confident** mix — see drift #7, #16.
+**Correct:** Delete is two-phase (Terminating → controller cleans actor). Client may return after mark-deleting; poll get until gone. Watch stops on Running/Failed/Completed - Completed never comes from controller, but Running closes watch early. **Likely/Confident** mix - see drift #7, #16.
 
 ## Niche findings
 
-- **Confident** — Tunnel state `~/.ax/tunnels/<context>.json`. [`internal/tunnel/`](https://github.com/google/ax/blob/main/internal/tunnel/).
-- **Confident** — Version string mentions standalone redis engine (not git semver). main.go.
-- **Confident** — `demo.sh` exists for smoke.
-- **Likely** — `ax delete` blocking-until-gone is concepts-doc intent; verify client poll in main.go when teaching live.
-- **Unknown** — kubeconfig-less operation; multi-tenant auth to ax-server (none in-tree).
+- **Confident** - Tunnel state `~/.ax/tunnels/<context>.json`. [`internal/tunnel/`](https://github.com/google/ax/blob/main/internal/tunnel/).
+- **Confident** - Version string mentions standalone redis engine (not git semver). main.go.
+- **Confident** - `demo.sh` exists for smoke.
+- **Likely** - `ax delete` blocking-until-gone is concepts-doc intent; verify client poll in main.go when teaching live.
+- **Unknown** - kubeconfig-less operation; multi-tenant auth to ax-server (none in-tree).
 
 ## Junior exercise
 
-Troubleshooting flowchart (no cluster needed — reason it out):
+Troubleshooting flowchart (no cluster needed - reason it out):
 
 1. `ax get tasks` → connection refused. What three checks? (`ax ctx`, `ax tunnel list`, `--server`/`AX_SERVER`).
 2. `ax ssh` → fails on Running task. What YAML field? (`debug: true`).
@@ -60,7 +60,7 @@ Troubleshooting flowchart (no cluster needed — reason it out):
 
 ## One-line definition
 
-**`ax` CLI** — declarative client, auto-tunnel, agent verbs (`ssh`, `suspend`, `watch`).
+**`ax` CLI** - declarative client, auto-tunnel, agent verbs (`ssh`, `suspend`, `watch`).
 
 ## Commands
 

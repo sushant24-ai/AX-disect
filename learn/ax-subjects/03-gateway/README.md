@@ -1,18 +1,18 @@
-# 03 — Gateway
+# 03 - Gateway
 
 ## Say this first
 
-A Gateway is mostly an **egress allowlist** for tasks. Listeners in the YAML look important but AX does not open those ports for you. If a task has no gateway, the controller still applies a default allow-all on port 443 semantics at the Substrate policy layer — and the YAML `HostRule.port` field is ignored when building rules.
+A Gateway is mostly an **egress allowlist** for tasks. Listeners in the YAML look important but AX does not open those ports for you. If a task has no gateway, the controller still applies a default allow-all on port 443 semantics at the Substrate policy layer - and the YAML `HostRule.port` field is ignored when building rules.
 
 ## Kubernetes analogy (one sentence)
 
-Gateway is like a NetworkPolicy egress list attached to the actor — not like a Service that publishes listener ports.
+Gateway is like a NetworkPolicy egress list attached to the actor - not like a Service that publishes listener ports.
 
 ### Where the analogy breaks
 
-- **Listeners are not reconciled** — CLI may display them; controller never binds them. **Confident**.
-- Inbound uses **atenet-router** + `ate-target-actor`, not Gateway listeners. **Confident** — [`docs/networking.md`](https://github.com/google/ax/blob/main/docs/networking.md).
-- `HostRule.port` in proto/YAML does **nothing** in `ApplyEgressPolicy`. **Confident** — [`internal/substrate/client.go`](https://github.com/google/ax/blob/main/internal/substrate/client.go) L449–490 loops hosts, never reads `h.Port`.
+- **Listeners are not reconciled** - CLI may display them; controller never binds them. **Confident**.
+- Inbound uses **atenet-router** + `ate-target-actor`, not Gateway listeners. **Confident** - [`docs/networking.md`](https://github.com/google/ax/blob/main/docs/networking.md).
+- `HostRule.port` in proto/YAML does **nothing** in `ApplyEgressPolicy`. **Confident** - [`internal/substrate/client.go`](https://github.com/google/ax/blob/main/internal/substrate/client.go) L449 - 490 loops hosts, never reads `h.Port`.
 
 ## Big picture diagram
 
@@ -40,11 +40,11 @@ sequenceDiagram
 
 ## Niche findings
 
-- **Confident** — Default when gateway missing: allowlist host `*` (see reconciler ~L193–198).
-- **Confident** — Policy apply failure → `GatewayReady=False` but reconcile **continues**. reconciler ~L200–202.
-- **Likely** — `SaveGateway` writes Redis hash/index only — **no** task stream `XADD`. Updating a Gateway alone does **not** re-reconcile tasks. Workaround: re-`ax apply` the Task (or otherwise publish a task reconcile). [`internal/store/redis/store.go`](https://github.com/google/ax/blob/main/internal/store/redis/store.go) `SaveGateway`.
-- **Confident** — `*` / `0.0.0.0/0` → Substrate `EgressRule.All`; else hostname patterns or CIDRs.
-- **Unknown** — Wildcard hostname semantics inside Substrate’s egress engine (out of tree).
+- **Confident** - Default when gateway missing: allowlist host `*` (see reconciler ~L193 - 198).
+- **Confident** - Policy apply failure → `GatewayReady=False` but reconcile **continues**. reconciler ~L200 - 202.
+- **Likely** - `SaveGateway` writes Redis hash/index only - **no** task stream `XADD`. Updating a Gateway alone does **not** re-reconcile tasks. Workaround: re-`ax apply` the Task (or otherwise publish a task reconcile). [`internal/store/redis/store.go`](https://github.com/google/ax/blob/main/internal/store/redis/store.go) `SaveGateway`.
+- **Confident** - `*` / `0.0.0.0/0` → Substrate `EgressRule.All`; else hostname patterns or CIDRs.
+- **Unknown** - Wildcard hostname semantics inside Substrate’s egress engine (out of tree).
 
 ## Junior exercise
 
@@ -64,21 +64,21 @@ metadata:
   atespace: default
 spec:
   listeners:
-    - name: grpc
+ - name: grpc
       port: 8494
       protocol: gRPC
   egress:
     allowlist:
       hosts:
-        - host: api.example.com
+ - host: api.example.com
           port: 443    # ignored by ApplyEgressPolicy
-        - host: "*"
+ - host: "*"
           port: 443
 ```
 
 Task reference: `spec.gateway.name: default-gateway`.
 
-No Gateway status subresource — Task gets `GatewayReady`.
+No Gateway status subresource - Task gets `GatewayReady`.
 
 ## Architecture path
 
@@ -99,7 +99,7 @@ No Gateway status subresource — Task gets `GatewayReady`.
 
 | Item | Tag |
 |------|-----|
-| Listener → Substrate ingress | **Unknown** — not in AX reconciler |
+| Listener → Substrate ingress | **Unknown** - not in AX reconciler |
 | Per-port egress | **Confident not implemented** |
-| Cross-atespace Gateway share | **Confident no** — store keys per atespace |
+| Cross-atespace Gateway share | **Confident no** - store keys per atespace |
 | Substrate wildcard semantics | **Unknown** |

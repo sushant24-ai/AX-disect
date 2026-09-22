@@ -1,18 +1,18 @@
-# 10 — Scale and failure modes
+# 10 - Scale and failure modes
 
 ## Say this first
 
-At scale you size three things: Redis (memory + stream lag), ax-controller replicas (consumer group throughput), and Substrate workers/snapshots (real CPU/RAM/disk). Agent failures amplify: money loops, idle Running sandboxes, over-broad egress, and split brain between Redis status and actors. “Billions of tasks” is a design slogan — measure stream lag first.
+At scale you size three things: Redis (memory + stream lag), ax-controller replicas (consumer group throughput), and Substrate workers/snapshots (real CPU/RAM/disk). Agent failures amplify: money loops, idle Running sandboxes, over-broad egress, and split brain between Redis status and actors. “Billions of tasks” is a design slogan - measure stream lag first.
 
 ## Kubernetes analogy (one sentence)
 
-Classic etcd/controller/Pod failure modes still exist — remapped to Redis streams, Substrate workers, and suspend snapshots.
+Classic etcd/controller/Pod failure modes still exist - remapped to Redis streams, Substrate workers, and suspend snapshots.
 
 ### Where the analogy breaks
 
 - `spec.resources` / quotas **do not** protect neighbors today.
 - Idle cost is **Running actors + LLM spend**, not only Pod CPU requests.
-- Always-ACK workers mean bad tasks don’t wedge the queue — they Fail and move on.
+- Always-ACK workers mean bad tasks don’t wedge the queue - they Fail and move on.
 
 ## Big picture diagram
 
@@ -31,18 +31,18 @@ flowchart TB
 
 ## Wrong mental model
 
-**Mistake:** “If Redis and controllers are fine, we’re scaled — agents can’t hurt us.”
+**Mistake:** “If Redis and controllers are fine, we’re scaled - agents can’t hurt us.”
 
 **Correct:** Measure Substrate worker saturation, snapshot GCS growth, Gateway `*` egress, debug=true fleet, and Pending→Running latency. Control plane health ≠ agent blast radius.
 
 ## Niche findings
 
-- **Confident** — Always ACK: [`worker.go`](https://github.com/google/ax/blob/main/internal/controller/worker.go) L64–66.
-- **Confident** — Watch closes at Running/Failed/Completed: [`server.go`](https://github.com/google/ax/blob/main/internal/server/server.go).
-- **Confident** — Default egress `*:443` when no gateway.
-- **Confident** — Crash recreate path in substrate client.
-- **Likely** — Multi-tenant isolation via atespace is logical; Substrate authz out of tree.
-- **Likely** — Billions/task: unbenchmarked; falsify with stream pending, Redis RSS, worker queue depth.
+- **Confident** - Always ACK: [`worker.go`](https://github.com/google/ax/blob/main/internal/controller/worker.go) L64 - 66.
+- **Confident** - Watch closes at Running/Failed/Completed: [`server.go`](https://github.com/google/ax/blob/main/internal/server/server.go).
+- **Confident** - Default egress `*:443` when no gateway.
+- **Confident** - Crash recreate path in substrate client.
+- **Likely** - Multi-tenant isolation via atespace is logical; Substrate authz out of tree.
+- **Likely** - Billions/task: unbenchmarked; falsify with stream pending, Redis RSS, worker queue depth.
 
 ### What to measure first
 
@@ -84,7 +84,7 @@ Pick one failure from the catalog below. Write: symptom a junior sees in `ax get
 
 ## Operator notes
 
-- Blast radius of ax-server access ≈ full task control — NetworkPolicy.
+- Blast radius of ax-server access ≈ full task control - NetworkPolicy.
 - Suspend does not cancel in-flight LLM calls inside the guest.
 - Use [`demo.sh`](https://github.com/google/ax/blob/main/demo.sh) as deploy smoke.
 
@@ -94,5 +94,5 @@ Pick one failure from the catalog below. Write: symptom a junior sees in `ax get
 |------|-----|
 | Built-in budgets | **Confident unused** |
 | Create rate limit | **Unknown** |
-| Auto idle detect | **Unknown** — manual suspend |
+| Auto idle detect | **Unknown** - manual suspend |
 | atespace authz | **Likely** logical |

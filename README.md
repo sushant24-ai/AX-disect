@@ -16,15 +16,15 @@ Upstream source of truth: **[google/ax](https://github.com/google/ax)**. Re-veri
 
 ## Quick start (first visit)
 
-1. Skim this page — especially the architecture diagram and reading paths below.
+1. Skim this page - especially the architecture diagram and reading paths below.
 2. Open the curriculum index: [`learn/README.md`](learn/README.md).
 3. Orient with the map: [`learn/ax-subjects/00-map/`](learn/ax-subjects/00-map/README.md) (happy-path poster + mermaid).
 4. Pick a path:
-   - **Architects:** 00 → 05 → 08 → 11, then deepen 01–04 / 06–07 / 09–10 as needed.
-   - **Juniors:** follow 00 → 01 → 05 → 08 → 06 → 02–04 → 07 → 09 → 10, keep 11 open as the drift log.
+ - **Architects:** 00 → 05 → 08 → 11, then deepen 01 - 04 / 06 - 07 / 09 - 10 as needed.
+ - **Juniors:** follow 00 → 01 → 05 → 08 → 06 → 02 - 04 → 07 → 09 → 10, keep 11 open as the drift log.
 5. For each subject: speak **Say this first**, contrast the **Kubernetes analogy** with **Where it breaks**, walk the diagram, then do the **Junior exercise**.
 
-No live AX cluster is required for most exercises — file reads and upstream GitHub raw links are enough.
+No live AX cluster is required for most exercises - file reads and upstream GitHub raw links are enough.
 
 ## Architecture overview
 
@@ -32,7 +32,7 @@ AX is a Redis-backed gRPC control plane. Agent Substrate runs the sandboxes. Fai
 
 ```mermaid
 flowchart TB
-  subgraph ax_cp["AX control plane — ax-system"]
+  subgraph ax_cp["AX control plane - ax-system"]
     CLI["ax CLI"]
     SRV["ax-server :8080 gRPC"]
     REDIS[(Redis hashes + streams + pubsub)]
@@ -41,11 +41,11 @@ flowchart TB
     REDIS --> CTL
   end
 
-  subgraph sub["Agent Substrate — ate-system"]
+  subgraph sub["Agent Substrate - ate-system"]
     API["Control API"]
     ACT["Actor = task name"]
     RTR["atenet-router"]
-    WRK["Worker :80 — ax-task-runner"]
+    WRK["Worker :80 - ax-task-runner"]
     API --> ACT
     RTR --> WRK
   end
@@ -75,8 +75,8 @@ flowchart TB
 | 1 | [00-map](learn/ax-subjects/00-map/README.md) | Whole-system picture |
 | 2 | [05-control-plane](learn/ax-subjects/05-control-plane/README.md) | Redis streams, reconciliation, no CRDs |
 | 3 | [08-substrate](learn/ax-subjects/08-substrate/README.md) | Boundary and split failure domains |
-| 4 | [11-doc-vs-code](learn/ax-subjects/11-doc-vs-code/README.md) | Drift register — trust code over prose |
-| 5+ | 01–04, 06–07, 09–10 | Depth on primitives, runner, networking, ops |
+| 4 | [11-doc-vs-code](learn/ax-subjects/11-doc-vs-code/README.md) | Drift register - trust code over prose |
+| 5+ | 01 - 04, 06 - 07, 09 - 10 | Depth on primitives, runner, networking, ops |
 
 ### Juniors (guided curriculum)
 
@@ -98,7 +98,7 @@ Full index, session shape, and confidence legend: **[`learn/README.md`](learn/RE
 
 | # | Topic |
 |---|--------|
-| [00](learn/ax-subjects/00-map/README.md) | Map — index & k8s mental-model |
+| [00](learn/ax-subjects/00-map/README.md) | Map - index & k8s mental-model |
 | [01](learn/ax-subjects/01-task/README.md) | Task |
 | [02](learn/ax-subjects/02-workspace/README.md) | Workspace |
 | [03](learn/ax-subjects/03-gateway/README.md) | Gateway |
@@ -129,4 +129,4 @@ Teaching content in this repository is original material by the owner, licensed 
 
 ## Contributor
 
-- **Sushant** ([@sushant24-ai](https://github.com/sushant24-ai)) — curriculum author and maintainer
+- **Sushant** ([@sushant24-ai](https://github.com/sushant24-ai)) - curriculum author and maintainer

@@ -1,8 +1,8 @@
-# 07 — Networking (atenet)
+# 07 - Networking (atenet)
 
 ## Say this first
 
-Tasks do not get Kubernetes Services. Every request goes through Substrate’s **atenet-router** with header `ate-target-actor: <atespace>/<task>`. That header selects the actor (and may resume it). Separately, the `ax` CLI reaches **ax-server** via kubectl port-forward/tunnel — that path is not atenet.
+Tasks do not get Kubernetes Services. Every request goes through Substrate’s **atenet-router** with header `ate-target-actor: <atespace>/<task>`. That header selects the actor (and may resume it). Separately, the `ax` CLI reaches **ax-server** via kubectl port-forward/tunnel - that path is not atenet.
 
 ## Kubernetes analogy (one sentence)
 
@@ -11,7 +11,7 @@ atenet-router is like one ClusterIP Service for all tasks, with a mesh-style hea
 ### Where the analogy breaks
 
 - **No stable per-task DNS/IP.**
-- Router may **resume suspended actors** on traffic. **Likely** — stated in [`docs/networking.md`](https://github.com/google/ax/blob/main/docs/networking.md); implementation lives in agent-substrate, not google/ax.
+- Router may **resume suspended actors** on traffic. **Likely** - stated in [`docs/networking.md`](https://github.com/google/ax/blob/main/docs/networking.md); implementation lives in agent-substrate, not google/ax.
 - Gateway listeners ≠ inbound path; inbound fronts **worker:80**.
 
 ## Big picture diagram
@@ -45,12 +45,12 @@ Request path (in-cluster): client → `atenet-router.ate-system` + header → wo
 
 ## Niche findings
 
-- **Confident** — Header format `<atespace>/<task>`; actor name = task name. [`docs/networking.md`](https://github.com/google/ax/blob/main/docs/networking.md) (32 lines — thin by necessity).
-- **Confident** — Controller polls `workerIP` directly or router + header when `ATENET_ROUTER_ADDR` set. [`reconciler.go`](https://github.com/google/ax/blob/main/internal/controller/reconciler.go).
-- **Confident** — `ax ssh` uses [`internal/guest/client.go`](https://github.com/google/ax/blob/main/internal/guest/client.go) `DialTarget` with header.
-- **Confident** — CLI→ax-server tunnel is [`internal/tunnel/`](https://github.com/google/ax/blob/main/internal/tunnel/tunnel.go) — different path.
-- **Likely** — Auto-resume on inbound (doc claim; Substrate repo).
-- **Unknown** — TLS at router; NetworkPolicy between ax-system and ate-system.
+- **Confident** - Header format `<atespace>/<task>`; actor name = task name. [`docs/networking.md`](https://github.com/google/ax/blob/main/docs/networking.md) (32 lines - thin by necessity).
+- **Confident** - Controller polls `workerIP` directly or router + header when `ATENET_ROUTER_ADDR` set. [`reconciler.go`](https://github.com/google/ax/blob/main/internal/controller/reconciler.go).
+- **Confident** - `ax ssh` uses [`internal/guest/client.go`](https://github.com/google/ax/blob/main/internal/guest/client.go) `DialTarget` with header.
+- **Confident** - CLI→ax-server tunnel is [`internal/tunnel/`](https://github.com/google/ax/blob/main/internal/tunnel/tunnel.go) - different path.
+- **Likely** - Auto-resume on inbound (doc claim; Substrate repo).
+- **Unknown** - TLS at router; NetworkPolicy between ax-system and ate-system.
 
 ## Junior exercise
 
@@ -69,18 +69,18 @@ Reach tasks via **atenet-router** + **`ate-target-actor`**, not per-task Service
 | Laptop curl | PF router | Debug metadata |
 | `ax ssh` | guest via router | Exec |
 
-Inside sandbox: `curl $AX_METADATA_URL/...` — no header needed.
+Inside sandbox: `curl $AX_METADATA_URL/...` - no header needed.
 
 ## Operator notes
 
 - Deploy Substrate (`ate-system`, `atenet-router`) before expecting task reachability.
 - Suspended + inbound traffic ⇒ cost side effect if auto-resume is real.
-- `workerIP` may be host:port — reconciler splits with `net.SplitHostPort`.
+- `workerIP` may be host:port - reconciler splits with `net.SplitHostPort`.
 
 ## Open questions
 
 | Item | Tag |
 |------|-----|
-| Router auto-resume | **Likely** — Substrate out of tree |
+| Router auto-resume | **Likely** - Substrate out of tree |
 | Router TLS | **Unknown** |
 | Gateway listeners vs router | **Likely doc-only** |
