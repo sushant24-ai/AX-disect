@@ -1,6 +1,6 @@
 # AX-disect
 
-First-principles learning notes for [google/ax](https://github.com/google/ax) — Google's declarative orchestrator for sandboxed agent workloads on Agent Substrate.
+First-principles learning notes for [google/ax](https://github.com/google/ax) Google's declarative orchestrator for sandboxed agent workloads on Agent Substrate.
 
 Built for **Kubernetes-fluent engineers** and **architects teaching juniors**: map AX objects and control-plane paths to familiar k8s mental models, then show where the analogy breaks.
 
